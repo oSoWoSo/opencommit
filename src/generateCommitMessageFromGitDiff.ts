@@ -3,10 +3,8 @@ import {
   ChatCompletionRequestMessageRoleEnum
 } from 'openai';
 import { api } from './api';
-import { getConfig } from './commands/config';
-import { mergeDiffs } from './utils/mergeDiffs';
-import { i18n, I18nLocals } from './i18n';
-import { tokenCount } from './utils/tokenCount';
+import { CONFIG_KEYS, getConfig } from './commands/config';
+import { mergeStrings } from './utils/mergeStrings';
 
 const config = getConfig();
 const translation = i18n[(config?.language as I18nLocals) || 'en'];
@@ -14,11 +12,15 @@ const translation = i18n[(config?.language as I18nLocals) || 'en'];
 const INIT_MESSAGES_PROMPT: Array<ChatCompletionRequestMessage> = [
   {
     role: ChatCompletionRequestMessageRoleEnum.System,
-    // prettier-ignore
-    content: `You are to act as the author of a commit message in git. Your mission is to create clean and comprehensive commit messages in the conventional commit convention and explain why a change was done. I'll send you an output of 'git diff --staged' command, and you convert it into a commit message.
-${config?.emoji? 'Use GitMoji convention to preface the commit.': 'Do not preface the commit with anything.'}
-${config?.description  ? 'Add a short description of WHY the changes are done after the commit message. Don\'t start it with "This commit", just describe the changes.': "Don't add any descriptions to the commit, only commit message."}
-Use the present tense. Lines must not be longer than 74 characters. Use ${translation.localLanguage} to answer.`
+    content: `You are to act as the author of a commit message in git. Your mission is to create clean and comprehensive commit messages in the conventional commit convention. I'll send you an output of 'git diff --staged' command, and you convert it into a commit message. ${
+      config?.[CONFIG_KEYS.OPENCOMMIT_EMOJI]
+        ? 'Use Gitmoji convention to preface the commit'
+        : 'Do not preface the commit with anything'
+    }, use the present tense. ${
+      config?.[CONFIG_KEYS.OPENCOMMIT_DESCRIPTION]
+        ? 'Add a short description of what commit is about after the commit message. Don\'t start it with "This commit", just describe the changes.'
+        : "Don't add any descriptions to the commit, only commit message."
+    }`
   },
   {
     role: ChatCompletionRequestMessageRoleEnum.User,
@@ -49,9 +51,10 @@ app.use((_, res, next) => {
   },
   {
     role: ChatCompletionRequestMessageRoleEnum.Assistant,
-    content: `${config?.emoji ? '🐛 ' : ''}${translation.commitFix}
-${config?.emoji ? '✨ ' : ''}${translation.commitFeat}
-${config?.description ? translation.commitDescription : ''}`
+    // prettier-ignore
+    content: `${config?.[CONFIG_KEYS.OPENCOMMIT_EMOJI] ? '🐛 ' : ''}fix(server.ts): change port variable case from lowercase port to uppercase PORT
+${config?.[CONFIG_KEYS.OPENCOMMIT_EMOJI] ? '✨ ' : ''}feat(server.ts): add support for process.env.PORT environment variable
+${config?.[CONFIG_KEYS.OPENCOMMIT_DESCRIPTION] ? 'The port variable is now named PORT, which improves consistency with the naming conventions as PORT is a constant. Support for an environment variable allows the application to be more flexible as it can now run on any available port specified via the process.env.PORT environment variable.' : ''}`
   }
 ];
 

@@ -10,10 +10,8 @@ import { getI18nLocal } from '../i18n';
 
 export enum CONFIG_KEYS {
   OPENAI_API_KEY = 'OPENAI_API_KEY',
-  OPENAI_BASE_PATH = 'OPENAI_BASE_PATH',
-  description = 'description',
-  emoji = 'emoji',
-  language = 'language'
+  OPENCOMMIT_DESCRIPTION = 'OPENCOMMIT_DESCRIPTION',
+  OPENCOMMIT_EMOJI = 'OPENCOMMIT_EMOJI'
 }
 
 export enum CONFIG_MODES {
@@ -51,43 +49,25 @@ export const configValidators = {
 
     return value;
   },
-
-  [CONFIG_KEYS.description](value: any) {
+  [CONFIG_KEYS.OPENCOMMIT_DESCRIPTION](value: any) {
+    const parsedValue = typeof value === 'boolean' || value === 'true' ? value : 'false'
     validateConfig(
-      CONFIG_KEYS.description,
-      typeof value === 'boolean',
+      CONFIG_KEYS.OPENCOMMIT_DESCRIPTION,
+      typeof parsedValue === 'boolean',
       'Must be true or false'
     );
 
-    return value;
+    return parsedValue;
   },
-
-  [CONFIG_KEYS.emoji](value: any) {
+  [CONFIG_KEYS.OPENCOMMIT_EMOJI](value: any) {
+    const parsedValue = typeof value === 'boolean' || value === 'true' ? value : 'false'
     validateConfig(
-      CONFIG_KEYS.emoji,
-      typeof value === 'boolean',
+      CONFIG_KEYS.OPENCOMMIT_EMOJI,
+      typeof parsedValue === 'boolean',
       'Must be true or false'
     );
 
-    return value;
-  },
-
-  [CONFIG_KEYS.language](value: any) {
-    validateConfig(
-      CONFIG_KEYS.language,
-      getI18nLocal(value),
-      `${value} is not supported yet`
-    );
-    return getI18nLocal(value);
-  },
-
-  [CONFIG_KEYS.OPENAI_BASE_PATH](value: any) {
-    validateConfig(
-      CONFIG_KEYS.OPENAI_BASE_PATH,
-      typeof value == 'string',
-      `${value} is not supported yet`
-    );
-    return value;
+    return parsedValue;
   }
 };
 
@@ -99,14 +79,13 @@ const configPath = pathJoin(homedir(), '.opencommit');
 
 export const getConfig = (): ConfigType | null => {
   const configExists = existsSync(configPath);
-  if (!configExists) return null;
 
-  const configFile = readFileSync(configPath, 'utf8');
-  const config = iniParse(configFile);
+  const configFile = configExists ? readFileSync(configPath, 'utf8') : '';
+  const config = configFile? iniParse(configFile) : {};
 
-  for (const configKey of Object.keys(config)) {
+  for (const configKey in CONFIG_KEYS) {
     const validValue = configValidators[configKey as CONFIG_KEYS](
-      config[configKey]
+      config.hasOwnProperty(configKey) ? config[configKey] : process.env[configKey]
     );
 
     config[configKey] = validValue;
