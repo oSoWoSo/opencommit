@@ -10,6 +10,9 @@ import { getI18nLocal } from '../i18n';
 
 export const KNOWN_PROVIDERS = ['openai', 'llama'];
 
+import * as dotenv from 'dotenv'
+dotenv.config()
+
 export enum CONFIG_KEYS {
   OPENAI_API_KEY = 'OPENAI_API_KEY',
   LLAMA_LOCATION = 'LLAMA_LOCATION',
@@ -39,15 +42,15 @@ const validateConfig = (
 };
 
 export const configValidators = {
-  [CONFIG_KEYS.OPENAI_API_KEY](value: any) {
-    validateConfig(CONFIG_KEYS.OPENAI_API_KEY, value, 'Cannot be empty');
+  [CONFIG_KEYS.OPENCOMMIT_OPENAI_API_KEY](value: any) {
+    validateConfig(CONFIG_KEYS.OPENCOMMIT_OPENAI_API_KEY, value, 'Cannot be empty');
     validateConfig(
-      CONFIG_KEYS.OPENAI_API_KEY,
+      CONFIG_KEYS.OPENCOMMIT_OPENAI_API_KEY,
       value.startsWith('sk-'),
       'Must start with "sk-"'
     );
     validateConfig(
-      CONFIG_KEYS.OPENAI_API_KEY,
+      CONFIG_KEYS.OPENCOMMIT_OPENAI_API_KEY,
       value.length === 51,
       'Must be 51 characters long'
     );
