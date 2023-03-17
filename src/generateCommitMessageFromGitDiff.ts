@@ -5,8 +5,10 @@ import {
 import { api } from './api';
 import { getConfig } from './commands/config';
 import { mergeStrings } from './utils/mergeStrings';
+import { i18n, I18nLocals } from './i18n';
 
 const config = getConfig();
+const translation = i18n[config?.language as I18nLocals || 'en']
 
 const INIT_MESSAGES_PROMPT: Array<ChatCompletionRequestMessage> = [
   {
@@ -18,8 +20,8 @@ const INIT_MESSAGES_PROMPT: Array<ChatCompletionRequestMessage> = [
     }, use the present tense. ${
       config?.OPENCOMMIT_DESCRIPTION
         ? 'Add a short description of what commit is about after the commit message. Don\'t start it with "This commit", just describe the changes.'
-        : "Don't add any descriptions to the commit, only commit message."
-    }`
+        : 'Don\'t add any descriptions to the commit, only commit message.'
+    } Use ${translation.localLanguage} to answer.}`
   },
   {
     role: ChatCompletionRequestMessageRoleEnum.User,
