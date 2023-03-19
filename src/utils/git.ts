@@ -47,7 +47,7 @@ export const getStagedFiles = async (): Promise<string[]> => {
     gitDir
   ]);
 
-  if (!files) return [];
+  const filesList = files.split('\n');
 
   const filesList = files.split('\n');
 
