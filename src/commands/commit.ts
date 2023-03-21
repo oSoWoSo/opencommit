@@ -215,6 +215,8 @@ export async function commit(
       .join('\n')}`
   );
 
+  await generateCommitMessageFromGitDiff(staged.diff);
+}
   const [, generateCommitError] = await trytm(
     generateCommitMessageFromGitDiff(
       await getDiff({ files: stagedFiles }),
