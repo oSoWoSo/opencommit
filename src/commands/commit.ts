@@ -21,11 +21,14 @@ import {
 } from '@clack/prompts';
 import chalk from 'chalk';
 import { trytm } from '../utils/trytm';
+import { getConfig } from './config';
 
 const getGitRemotes = async () => {
   const { stdout } = await execa('git', ['remote']);
   return stdout.split('\n').filter((remote) => Boolean(remote.trim()));
 };
+
+const config = getConfig();
 
 const generateCommitMessageFromGitDiff = async (
   diff: string,
@@ -79,11 +82,8 @@ ${chalk.grey('——————————————————')}`
 
     const remotes = await getGitRemotes();
 
-    if (!remotes.length) {
-      const { stdout } = await execa('git', ['push']);
-      if (stdout) outro(stdout);
-      process.exit(0);
-    }
+    // user isn't pushing, return early
+    if(config?.gitpush === false) return
 
     if (remotes.length === 1) {
       const isPushConfirmedByUser = await confirm({

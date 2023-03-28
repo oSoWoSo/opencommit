@@ -13,7 +13,8 @@ export enum CONFIG_KEYS {
   OPENAI_BASE_PATH = 'OPENAI_BASE_PATH',
   description = 'description',
   emoji = 'emoji',
-  language = 'language'
+  language = 'language',
+  gitpush = 'gitpush'
 }
 
 export enum CONFIG_MODES {
@@ -71,7 +72,14 @@ export const configValidators = {
 
     return value;
   },
-
+  [CONFIG_KEYS.gitpush](value: any) {
+    validateConfig(
+      CONFIG_KEYS.gitpush,
+      typeof value === 'boolean',
+      'Must be true or false'
+    );
+    return value;
+  },
   [CONFIG_KEYS.language](value: any) {
     validateConfig(
       CONFIG_KEYS.language,
