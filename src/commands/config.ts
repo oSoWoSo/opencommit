@@ -16,7 +16,7 @@ export enum CONFIG_KEYS {
   description = 'description',
   emoji = 'emoji',
   language = 'language',
-  provider = 'provider'
+  gitpush = 'gitpush'
 }
 
 export enum CONFIG_MODES {
@@ -90,7 +90,14 @@ export const configValidators = {
 
     return value;
   },
-
+  [CONFIG_KEYS.gitpush](value: any) {
+    validateConfig(
+      CONFIG_KEYS.gitpush,
+      typeof value === 'boolean',
+      'Must be true or false'
+    );
+    return value;
+  },
   [CONFIG_KEYS.language](value: any) {
     validateConfig(
       CONFIG_KEYS.language,
