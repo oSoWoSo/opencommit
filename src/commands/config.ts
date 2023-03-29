@@ -16,7 +16,7 @@ export enum CONFIG_KEYS {
   description = 'description',
   emoji = 'emoji',
   language = 'language',
-  gitpush = 'gitpush'
+  provider = 'provider'
 }
 
 export enum CONFIG_MODES {
