@@ -1,5 +1,5 @@
 import { command } from 'cleye';
-import { join as pathJoin } from 'path';
+import { join as pathJoin, basename } from 'path';
 import { parse as iniParse, stringify as iniStringify } from 'ini';
 import { existsSync, writeFileSync, readFileSync } from 'fs';
 import { homedir } from 'os';
@@ -8,11 +8,15 @@ import chalk from 'chalk';
 import { COMMANDS } from '../CommandsEnum';
 import { getI18nLocal } from '../i18n';
 
+export const KNOWN_PROVIDERS = ["openai", "llama"]
+
 export enum CONFIG_KEYS {
   OPENAI_API_KEY = 'OPENAI_API_KEY',
+  LLAMA_LOCATION = 'LLAMA_LOCATION',
   description = 'description',
   emoji = 'emoji',
-  language = 'language'
+  language = 'language',
+  provider = 'provider'
 }
 
 export enum CONFIG_MODES {
@@ -51,6 +55,22 @@ export const configValidators = {
     return value;
   },
 
+  [CONFIG_KEYS.LLAMA_LOCATION](value: any) {
+validateConfig(CONFIG_KEYS.LLAMA_LOCATION, value, 'Cannot be empty');
+    validateConfig(
+      CONFIG_KEYS.LLAMA_LOCATION,
+      existsSync(value),
+      'Must be a valid path'
+    );
+    validateConfig(
+      CONFIG_KEYS.LLAMA_LOCATION,
+      basename(value) === 'main',
+      'Must be a valid path to the "llama.cpp/main" file'
+    );
+
+    return value;
+  },
+
   [CONFIG_KEYS.description](value: any) {
     validateConfig(
       CONFIG_KEYS.description,
@@ -78,6 +98,15 @@ export const configValidators = {
       `${value} is not supported yet`
     );
     return getI18nLocal(value);
+  },
+
+  [CONFIG_KEYS.provider](value: any) {
+    validateConfig(
+      CONFIG_KEYS.provider,
+      KNOWN_PROVIDERS.includes(value),
+      `${value} is not supported yet`
+    );
+    return value;
   }
 };
 
