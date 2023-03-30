@@ -1,4 +1,4 @@
-import { getOpenCommitLatestVersion } from '../api';
+import { getOpenCommitLatestVersion } from '../providers/openai/api';
 import currentPackage from '../../package.json' assert { type: 'json' };
 import chalk from 'chalk';
 

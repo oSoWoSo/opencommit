@@ -24,8 +24,8 @@ export enum I18nLocals {
   'pt_br' = 'pt_br',
   'es_ES' = 'es_ES',
   'sv' = 'sv',
-  'ru' = 'ru',
-};
+  'ru' = 'ru'
+}
 
 export const i18n = {
   en,
@@ -40,7 +40,7 @@ export const i18n = {
   vi_VN,
   es_ES,
   sv,
-  ru,
+  ru
 };
 
 export const I18N_CONFIG_ALIAS: { [key: string]: string[] } = {
@@ -48,7 +48,7 @@ export const I18N_CONFIG_ALIAS: { [key: string]: string[] } = {
   zh_TW: ['zh_TW', '繁體中文', '繁體'],
   ja: ['ja', 'Japanese', 'にほんご'],
   ko: ['ko', 'Korean', '한국어'],
-  de: ['de', 'German' ,'Deutsch'],
+  de: ['de', 'German', 'Deutsch'],
   fr: ['fr', 'French', 'française'],
   it: ['it', 'Italian', 'italiano'],
   pt_br: ['pt_br', 'Portuguese', 'português'],
@@ -56,7 +56,7 @@ export const I18N_CONFIG_ALIAS: { [key: string]: string[] } = {
   en: ['en', 'English', 'english'],
   es_ES: ['es_ES', 'Spanish', 'español'],
   sv: ['sv', 'Swedish', 'Svenska'],
-  ru: ['ru', 'Russian', 'русский'],
+  ru: ['ru', 'Russian', 'русский']
 };
 
 export function getI18nLocal(value: string): string | boolean {

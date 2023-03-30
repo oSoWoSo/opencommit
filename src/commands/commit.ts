@@ -1,8 +1,9 @@
 import { execa } from 'execa';
+import { getConfig } from './config';
 import {
-  GenerateCommitMessageErrorEnum,
-  generateCommitMessageWithChatCompletion
-} from '../generateCommitMessageFromGitDiff';
+  GenerateCommitMessageError,
+  GenerateCommitMessageErrorEnum
+} from '../providers/commons';
 import {
   assertGitRepo,
   getChangedFiles,
@@ -34,9 +35,18 @@ const generateCommitMessageFromGitDiff = async (
 ): Promise<void> => {
   await assertGitRepo();
 
+  const config = getConfig();
+
+  const { generateCommitMessageWithChatCompletion } = await import(
+    `../providers/${
+      config?.provider ?? 'openai'
+    }/generateCommitMessageFromGitDiff`
+  );
+
   const commitSpinner = spinner();
   commitSpinner.start('Generating the commit message');
-  const commitMessage = await generateCommitMessageWithChatCompletion(diff);
+  const commitMessage: string | GenerateCommitMessageError =
+    await generateCommitMessageWithChatCompletion(diff);
 
   // TODO: show proper error messages
   if (typeof commitMessage !== 'string') {

@@ -7,7 +7,7 @@ import {
   OpenAIApi
 } from 'openai';
 
-import { CONFIG_MODES, getConfig } from './commands/config';
+import { CONFIG_MODES, getConfig } from '../../commands/config';
 
 const config = getConfig();
 

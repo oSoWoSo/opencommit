@@ -3,7 +3,7 @@ import chalk from 'chalk';
 import { intro, outro, spinner } from '@clack/prompts';
 import { getChangedFiles, getDiff, getStagedFiles, gitAdd } from '../utils/git';
 import { getConfig } from './config';
-import { generateCommitMessageWithChatCompletion } from '../generateCommitMessageFromGitDiff';
+import { generateCommitMessageWithChatCompletion } from '../providers/openai/generateCommitMessageFromGitDiff';
 
 const [messageFilePath, commitSource] = process.argv.slice(2);
 
