@@ -29,10 +29,7 @@ export enum I18nLocals {
   'pt_br' = 'pt_br',
   'es_ES' = 'es_ES',
   'sv' = 'sv',
-  'ru' = 'ru',
-  'id_ID' = 'id_ID',
-  'pl' = 'pl',
-  'th' = 'th',
+  'ru' = 'ru'
 }
 
 export const i18n = {
