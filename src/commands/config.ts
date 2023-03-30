@@ -8,7 +8,7 @@ import chalk from 'chalk';
 import { COMMANDS } from '../CommandsEnum';
 import { getI18nLocal } from '../i18n';
 
-export const KNOWN_PROVIDERS = ["openai", "llama"]
+export const KNOWN_PROVIDERS = ['openai', 'llama'];
 
 export enum CONFIG_KEYS {
   OPENAI_API_KEY = 'OPENAI_API_KEY',
@@ -56,7 +56,7 @@ export const configValidators = {
   },
 
   [CONFIG_KEYS.LLAMA_LOCATION](value: any) {
-validateConfig(CONFIG_KEYS.LLAMA_LOCATION, value, 'Cannot be empty');
+    validateConfig(CONFIG_KEYS.LLAMA_LOCATION, value, 'Cannot be empty');
     validateConfig(
       CONFIG_KEYS.LLAMA_LOCATION,
       existsSync(value),
