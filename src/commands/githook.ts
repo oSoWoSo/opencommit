@@ -8,16 +8,9 @@ import { intro, outro } from '@clack/prompts';
 import { COMMANDS } from '../CommandsEnum.js';
 
 const HOOK_NAME = 'prepare-commit-msg';
-const DEFAULT_SYMLINK_URL = path.join('.git', 'hooks', HOOK_NAME);
+const SYMLINK_URL = path.join(path.sep, '.git', 'hooks', HOOK_NAME);
 
-const getHooksPath = async (): Promise<string> => {
-  try {
-    const hooksPath = await getCoreHooksPath();
-    return path.join(hooksPath, HOOK_NAME);
-  } catch (error) {
-    return DEFAULT_SYMLINK_URL;
-  }
-};
+export const isHookCalled = process.argv[1].endsWith(`${SYMLINK_URL}`);
 
 export const isHookCalled = async (): Promise<boolean> => {
   const hooksPath = await getHooksPath();
