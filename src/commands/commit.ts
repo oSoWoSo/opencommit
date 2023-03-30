@@ -23,7 +23,6 @@ import {
 import chalk from 'chalk';
 import { trytm } from '../utils/trytm';
 
-// Adding a function to get the list of remotes
 const getGitRemotes = async () => {
   const { stdout } = await execa('git', ['remote']);
   return stdout.split('\n').filter((remote) => remote.trim() !== '');
@@ -87,6 +86,7 @@ ${chalk.grey('——————————————————')}`
     outro(`${chalk.green('✔')} successfully committed`);
 
     outro(stdout);
+
     const remotes = await getGitRemotes();
 
     if (remotes.length === 1) {
