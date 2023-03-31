@@ -1,4 +1,5 @@
 import { execa } from 'execa';
+import fs from 'fs'; 
 import {
   GenerateCommitMessageErrorEnum,
   generateCommitMessageWithChatCompletion
@@ -118,10 +119,35 @@ ${chalk.grey('——————————————————')}`
           );
 
           if (stdout) outro(stdout);
-        } else outro(`${chalk.gray('✖')} process cancelled`);
+        } else {
+          outro('`git push` aborted');
+          process.exit(0);
+        }
       }
     } else if (isCommitConfirmedByUser == "edit" && !isCancel(isCommitConfirmedByUser)) {
-      await promptUserEdit(commitText)
+      //await promptUserEdit(commitText)
+      const editSpinner = spinner()
+
+      // The text to be written to the file
+      const text = commitText
+
+      // Write the text to a file
+      fs.writeFileSync('tmp_commit.txt', text);
+
+      // Open the file in the user's default editor
+      execa('open', ['tmp_commit.txt']);
+      // Wait for the user to close the file
+      editSpinner.start('Please close the file when you are done editing it.')
+      editSpinner.stop('Thank you!')
+      process.stdin.resume();
+
+      // Read the contents of the file back into the Node.js program
+      const updatedCommitMessage = fs.readFileSync('tmp_commit.txti', 'utf-8');
+      // Delete the file
+      fs.unlinkSync('tmp_commit.txt');
+
+      await promptUserConfirm(updatedCommitMessage)
+
     } else if (isCommitConfirmedByUser == "no" && !isCancel(isCommitConfirmedByUser)) {
       outro(`👋 exiting`);
     } 
