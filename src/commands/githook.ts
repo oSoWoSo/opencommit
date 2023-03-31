@@ -7,6 +7,26 @@ import chalk from 'chalk';
 import { intro, outro } from '@clack/prompts';
 import { COMMANDS } from '../CommandsEnum.js';
 
+const platform = process.platform;
+
+let separator = '';
+switch (platform) {
+  // Windows
+  case 'win32':
+    separator = path.sep;
+    break;
+  // macOS
+  case 'darwin':
+    separator = '';
+    break;
+  // Linux
+  case 'linux':
+    separator = '';
+    break;
+  default:
+    throw new Error(`Unsupported platform: ${platform}`);
+}
+
 const HOOK_NAME = 'prepare-commit-msg';
 const SYMLINK_URL = path.join(path.sep, '.git', 'hooks', HOOK_NAME);
 
